@@ -192,6 +192,41 @@
     margin-bottom: 12px;
   }
 
+  .fix-action {
+    width: 100%;
+    padding: 11px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--text);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 14px;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .fix-action:hover  { opacity: 0.9; }
+  .fix-action:active { transform: scale(0.99); }
+
+  .fix-or {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    margin: 4px 0 12px;
+    position: relative;
+  }
+  .fix-or::before, .fix-or::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 30px);
+    height: 1px;
+    background: var(--line);
+  }
+  .fix-or::before { left: 0; }
+  .fix-or::after  { right: 0; }
+
   .fix-steps {
     list-style: none;
     counter-reset: step;
@@ -491,23 +526,29 @@ function renderStatus(elId, st) {
 // --- Fix instructions ---
 const FIX = {
   camera: {
-    chrome:  ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Sélectionnez <strong>« Paramètres du site »</strong>", "Passez <strong>Caméra</strong> sur <strong>« Autoriser »</strong>", "Rechargez la page <kbd>F5</kbd>"],
-    edge:    ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Sélectionnez <strong>« Autorisations pour ce site »</strong>", "Passez <strong>Caméra</strong> sur <strong>« Autoriser »</strong>", "Rechargez la page <kbd>F5</kbd>"],
+    chrome:  ["Cliquez sur l'<strong>icône à gauche de l'adresse</strong> (deux curseurs ⇆)", "Sélectionnez <strong>« Paramètres du site »</strong>", "Passez <strong>Caméra</strong> sur <strong>« Autoriser »</strong>", "Rechargez la page <kbd>F5</kbd>"],
+    edge:    ["Cliquez sur l'<strong>icône à gauche de l'adresse</strong> (deux curseurs ⇆)", "Sélectionnez <strong>« Autorisations pour ce site »</strong>", "Passez <strong>Caméra</strong> sur <strong>« Autoriser »</strong>", "Rechargez la page <kbd>F5</kbd>"],
     firefox: ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Cliquez sur la croix ✕ à côté de <strong>Utiliser la caméra : Bloqué</strong>", "Rechargez la page <kbd>F5</kbd> et cliquez <strong>« Autoriser »</strong>"],
     safari:  ["Dans la barre de menu : <strong>Safari → Réglages</strong> <kbd>⌘,</kbd>", "Onglet <strong>Sites web</strong> → <strong>Caméra</strong>", "Trouvez <strong>evaluo.eu</strong> et sélectionnez <strong>« Autoriser »</strong>"]
   },
   microphone: {
-    chrome:  ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Sélectionnez <strong>« Paramètres du site »</strong>", "Passez <strong>Microphone</strong> sur <strong>« Autoriser »</strong>", "Rechargez la page <kbd>F5</kbd>"],
-    edge:    ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Sélectionnez <strong>« Autorisations pour ce site »</strong>", "Passez <strong>Microphone</strong> sur <strong>« Autoriser »</strong>", "Rechargez la page <kbd>F5</kbd>"],
+    chrome:  ["Cliquez sur l'<strong>icône à gauche de l'adresse</strong> (deux curseurs ⇆)", "Sélectionnez <strong>« Paramètres du site »</strong>", "Passez <strong>Microphone</strong> sur <strong>« Autoriser »</strong>", "Rechargez la page <kbd>F5</kbd>"],
+    edge:    ["Cliquez sur l'<strong>icône à gauche de l'adresse</strong> (deux curseurs ⇆)", "Sélectionnez <strong>« Autorisations pour ce site »</strong>", "Passez <strong>Microphone</strong> sur <strong>« Autoriser »</strong>", "Rechargez la page <kbd>F5</kbd>"],
     firefox: ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Cliquez sur la croix ✕ à côté de <strong>Utiliser le microphone : Bloqué</strong>", "Rechargez la page <kbd>F5</kbd> et cliquez <strong>« Autoriser »</strong>"],
     safari:  ["Dans la barre de menu : <strong>Safari → Réglages</strong> <kbd>⌘,</kbd>", "Onglet <strong>Sites web</strong> → <strong>Microphone</strong>", "Trouvez <strong>evaluo.eu</strong> et sélectionnez <strong>« Autoriser »</strong>"]
   },
   notifications: {
-    chrome:  ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Sélectionnez <strong>« Paramètres du site »</strong>", "Passez <strong>Notifications</strong> sur <strong>« Autoriser »</strong>"],
-    edge:    ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Sélectionnez <strong>« Autorisations pour ce site »</strong>", "Passez <strong>Notifications</strong> sur <strong>« Autoriser »</strong>"],
+    chrome:  ["Cliquez sur l'<strong>icône à gauche de l'adresse</strong> (deux curseurs ⇆)", "Sélectionnez <strong>« Paramètres du site »</strong>", "Passez <strong>Notifications</strong> sur <strong>« Autoriser »</strong>"],
+    edge:    ["Cliquez sur l'<strong>icône à gauche de l'adresse</strong> (deux curseurs ⇆)", "Sélectionnez <strong>« Autorisations pour ce site »</strong>", "Passez <strong>Notifications</strong> sur <strong>« Autoriser »</strong>"],
     firefox: ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Cliquez sur la croix ✕ à côté de <strong>Envoyer des notifications : Bloqué</strong>", "Rechargez la page <kbd>F5</kbd> et acceptez la demande"],
     safari:  ["Dans la barre de menu : <strong>Safari → Réglages</strong> <kbd>⌘,</kbd>", "Onglet <strong>Sites web</strong> → <strong>Notifications</strong>", "Trouvez <strong>evaluo.eu</strong> et sélectionnez <strong>« Autoriser »</strong>"]
   }
+};
+
+const ACTION_LABELS = {
+  camera:        'Activer la caméra',
+  microphone:    'Activer le microphone',
+  notifications: 'Activer les notifications'
 };
 
 function renderFix(elId, permKey, st) {
@@ -518,11 +559,45 @@ function renderFix(elId, permKey, st) {
   }
   const steps = FIX[permKey]?.[browserType];
   if (!steps) { el.innerHTML = ''; return; }
+
+  let actionHtml = '';
+  if (st === 'prompt') {
+    actionHtml =
+      '<button class="fix-action" onclick="requestPermission(\'' + permKey + '\')">' +
+        ACTION_LABELS[permKey] +
+      '</button>' +
+      '<div class="fix-or">ou manuellement</div>';
+  }
+
   el.innerHTML =
     '<div class="fix-block">' +
-    '<div class="fix-title">Comment autoriser</div>' +
+    '<div class="fix-title">' + (st === 'denied' ? 'Comment débloquer' : 'Comment autoriser') + '</div>' +
+    actionHtml +
     '<ol class="fix-steps">' + steps.map(s => '<li>' + s + '</li>').join('') + '</ol>' +
     '</div>';
+}
+
+async function requestPermission(permKey) {
+  try {
+    if (permKey === 'notifications') {
+      const result = await Notification.requestPermission();
+      state.notif = result === 'default' ? 'prompt' : result;
+      renderStatus('status-notif', state.notif);
+      renderFix('fix-notif', 'notifications', state.notif);
+      updateGlobalStatus();
+      if (result === 'granted') {
+        try { new Notification('Evaluo', { body: 'Les notifications sont bien activées.' }); } catch(e) {}
+      }
+    } else if (permKey === 'camera' || permKey === 'microphone') {
+      const constraints = permKey === 'camera' ? { video: true } : { audio: true };
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      stream.getTracks().forEach(t => t.stop());
+      await enumDevices();
+      updateGlobalStatus();
+    }
+  } catch(e) {
+    // Permission refusée ou popup fermée — l'API onchange / le re-check mettra à jour l'état
+  }
 }
 
 // --- State ---
