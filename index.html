@@ -3,492 +3,697 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diagnostic Evaluo — Permissions navigateur</title>
+<title>Diagnostic Evaluo</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #f5f4f0;
+    --bg: #f7f5f1;
     --surface: #ffffff;
-    --border: #dddbd4;
     --text: #1a1917;
-    --muted: #7a7872;
-    --ok: #1a6b3c;
-    --ok-bg: #e8f5ee;
-    --ok-border: #a8d9bc;
-    --warn: #7a4a00;
-    --warn-bg: #fff4e0;
-    --warn-border: #f0c97a;
-    --err: #8b1c1c;
-    --err-bg: #fdeaea;
-    --err-border: #f0a8a8;
-    --accent: #1a1917;
+    --text-soft: #4a4845;
+    --muted: #8a8782;
+    --line: #e8e5dc;
+    --line-soft: #f0ede5;
+
+    --ok: #137d3f;
+    --ok-bg: #e8f5ed;
+    --warn: #a06200;
+    --warn-bg: #fff3e0;
+    --err: #b53030;
+    --err-bg: #fbeaea;
+
+    --shadow-sm: 0 1px 2px rgba(26, 25, 23, 0.04);
   }
 
   body {
-    font-family: 'IBM Plex Sans', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    padding: 40px 20px 60px;
+    padding: 32px 20px 64px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  .wrap {
-    max-width: 640px;
-    margin: 0 auto;
-  }
+  .wrap { max-width: 600px; margin: 0 auto; }
 
-  header {
-    margin-bottom: 36px;
-    padding-bottom: 24px;
-    border-bottom: 1.5px solid var(--border);
-  }
+  /* Header */
+  header { margin-bottom: 24px; }
 
-  .logo {
+  .brand {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
     font-weight: 500;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-soft);
+    margin-top: 8px;
+    font-weight: 400;
+  }
+
+  /* Status hero */
+  .status-hero {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin: 24px 0 16px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--line-soft);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.25s ease;
+  }
+
+  .status-hero.ok {
+    background: var(--ok-bg);
+    border-color: #b8dec5;
+  }
+  .status-hero.issue {
+    background: var(--warn-bg);
+    border-color: #f0c97a;
+  }
+  .status-hero.error {
+    background: var(--err-bg);
+    border-color: #f0a8a8;
+  }
+
+  .status-icon {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px;
+    font-weight: 600;
+    background: var(--bg);
+    color: var(--muted);
+  }
+  .status-hero.ok .status-icon    { background: var(--ok); color: white; }
+  .status-hero.issue .status-icon { background: var(--warn); color: white; }
+  .status-hero.error .status-icon { background: var(--err); color: white; }
+
+  .status-text { flex: 1; min-width: 0; }
+  .status-title { font-size: 15px; font-weight: 600; line-height: 1.3; }
+  .status-sub {
+    font-size: 13px;
+    color: var(--text-soft);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .status-hero.ok .status-sub    { color: #1a6b3c; }
+  .status-hero.issue .status-sub { color: #7a4a00; }
+  .status-hero.error .status-sub { color: #8b1c1c; }
+
+  /* Permission cards */
+  .perm-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--line-soft);
+  }
+
+  .perm-card-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .perm-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .perm-info { flex: 1; min-width: 0; }
+  .perm-name { font-size: 14px; font-weight: 500; }
+  .perm-detail {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .perm-status {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    flex-shrink: 0;
+  }
+  .perm-status.checking { background: var(--bg); color: var(--muted); }
+  .perm-status.ok       { background: var(--ok-bg);   color: var(--ok); }
+  .perm-status.warn     { background: var(--warn-bg); color: var(--warn); }
+  .perm-status.err      { background: var(--err-bg);  color: var(--err); }
+
+  /* Fix block */
+  .fix-block {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--line);
+  }
+
+  .fix-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--muted);
     margin-bottom: 12px;
   }
 
-  h1 {
-    font-size: 22px;
+  .fix-steps {
+    list-style: none;
+    counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .fix-steps li {
+    counter-increment: step;
+    padding-left: 32px;
+    position: relative;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-soft);
+  }
+
+  .fix-steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0; top: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--text);
+    color: white;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
     font-weight: 500;
-    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  kbd {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-weight: 500;
     color: var(--text);
   }
 
-  .subtitle {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 6px;
-    font-weight: 300;
-  }
-
-  .ts {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 8px;
-  }
-
-  .section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+  /* Unsupported banner */
+  .unsupported {
+    background: var(--err-bg);
+    border: 1px solid #f0a8a8;
+    border-radius: 12px;
+    padding: 18px 20px;
     margin-bottom: 16px;
-    overflow: hidden;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .unsupported-icon {
+    width: 36px; height: 36px;
+    background: var(--err);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .unsupported-title { font-size: 15px; font-weight: 600; color: var(--err); margin-bottom: 4px; }
+  .unsupported-body { font-size: 13px; color: #8b1c1c; line-height: 1.5; }
+
+  /* Info section */
+  .info-section {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
   }
 
-  .section-header {
-    padding: 10px 16px;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 24px;
+  }
+
+  .info-item .label {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 10px;
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--muted);
+    margin-bottom: 4px;
   }
 
-  .row {
-    display: flex;
-    align-items: flex-start;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-    gap: 12px;
-  }
-  .row:last-child { border-bottom: none; }
+  .info-item .value { font-size: 13px; color: var(--text); font-weight: 400; }
 
-  .row-label {
-    font-size: 13px;
-    color: var(--muted);
-    width: 170px;
-    flex-shrink: 0;
-    padding-top: 2px;
-    font-weight: 400;
-  }
-
-  .row-value {
-    flex: 1;
-    font-size: 13px;
-    color: var(--text);
-    font-weight: 400;
-  }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    font-weight: 500;
-    padding: 3px 8px;
-    border-radius: 4px;
-    white-space: nowrap;
-  }
-
-  .badge.ok    { background: var(--ok-bg);   color: var(--ok);   border: 1px solid var(--ok-border); }
-  .badge.warn  { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn-border); }
-  .badge.err   { background: var(--err-bg);  color: var(--err);  border: 1px solid var(--err-border); }
-  .badge.info  { background: #eef2ff;        color: #2d3ab7;     border: 1px solid #b8c4f0; }
-
-  .device-name {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--text);
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 4px 8px;
-    margin-top: 4px;
-    display: block;
-    word-break: break-word;
-  }
-
-  .device-list {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex: 1;
-  }
-
-  .note {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 4px;
-    font-style: italic;
-  }
-
-  .btn-copy {
+  /* Button */
+  .btn {
     margin-top: 24px;
     width: 100%;
-    padding: 12px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
+    padding: 14px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
     font-weight: 500;
-    letter-spacing: 0.05em;
     background: var(--text);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: opacity 0.15s;
+    transition: opacity 0.15s, transform 0.1s;
   }
-  .btn-copy:hover { opacity: 0.85; }
-  .btn-copy:active { opacity: 0.7; }
+  .btn:hover  { opacity: 0.9; }
+  .btn:active { transform: scale(0.99); }
 
   .footer-note {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--muted);
     text-align: center;
-    margin-top: 20px;
-    font-weight: 300;
+    margin-top: 16px;
+    line-height: 1.5;
   }
 
+  /* Spinner */
   .spinner {
     display: inline-block;
-    width: 10px; height: 10px;
-    border: 2px solid var(--border);
+    width: 16px; height: 16px;
+    border: 2px solid var(--line);
     border-top-color: var(--muted);
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-    margin-right: 4px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 480px) {
+    body { padding: 24px 14px 48px; }
+    h1 { font-size: 22px; }
+    .info-grid { grid-template-columns: 1fr; gap: 14px; }
+    .perm-card-head { flex-wrap: wrap; }
+    .perm-status { margin-left: 54px; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <header>
-    <div class="logo">Evaluo.eu · Support technique</div>
-    <h1>Diagnostic des permissions navigateur</h1>
-    <div class="subtitle">Vérification des accès requis pour les sessions de visioconférence</div>
-    <div class="ts" id="ts"></div>
+    <div class="brand">Evaluo · Diagnostic</div>
+    <h1>Vérifions votre configuration</h1>
+    <div class="subtitle">Permissions navigateur pour les sessions de visioconférence.</div>
   </header>
 
-  <!-- Permissions -->
-  <div class="section">
-    <div class="section-header">Permissions pour evaluo.eu</div>
+  <div id="unsupported-banner"></div>
 
-    <div class="row">
-      <div class="row-label">Caméra</div>
-      <div class="row-value" id="perm-camera"><span class="spinner"></span> Vérification…</div>
-    </div>
-    <div class="row">
-      <div class="row-label">Microphone</div>
-      <div class="row-value" id="perm-mic"><span class="spinner"></span> Vérification…</div>
-    </div>
-    <div class="row">
-      <div class="row-label">Partage d'écran</div>
-      <div class="row-value" id="perm-screen"><span class="spinner"></span> Vérification…</div>
-    </div>
-    <div class="row">
-      <div class="row-label">Notifications</div>
-      <div class="row-value" id="perm-notif"><span class="spinner"></span> Vérification…</div>
+  <div class="status-hero" id="status-hero">
+    <div class="status-icon"><span class="spinner"></span></div>
+    <div class="status-text">
+      <div class="status-title">Diagnostic en cours…</div>
+      <div class="status-sub">Vérification de vos permissions.</div>
     </div>
   </div>
 
-  <!-- Périphériques -->
-  <div class="section">
-    <div class="section-header">Périphériques détectés</div>
-
-    <div class="row">
-      <div class="row-label">Caméra(s)</div>
-      <div class="row-value device-list" id="dev-camera"><span class="spinner"></span> En attente de permission…</div>
+  <div class="perm-card" id="card-camera">
+    <div class="perm-card-head">
+      <div class="perm-icon">📷</div>
+      <div class="perm-info">
+        <div class="perm-name">Caméra</div>
+        <div class="perm-detail" id="detail-camera">Vérification…</div>
+      </div>
+      <div class="perm-status checking" id="status-camera">···</div>
     </div>
-    <div class="row">
-      <div class="row-label">Microphone(s)</div>
-      <div class="row-value device-list" id="dev-mic"><span class="spinner"></span> En attente de permission…</div>
+    <div id="fix-camera"></div>
+  </div>
+
+  <div class="perm-card" id="card-mic">
+    <div class="perm-card-head">
+      <div class="perm-icon">🎤</div>
+      <div class="perm-info">
+        <div class="perm-name">Microphone</div>
+        <div class="perm-detail" id="detail-mic">Vérification…</div>
+      </div>
+      <div class="perm-status checking" id="status-mic">···</div>
+    </div>
+    <div id="fix-mic"></div>
+  </div>
+
+  <div class="perm-card" id="card-notif">
+    <div class="perm-card-head">
+      <div class="perm-icon">🔔</div>
+      <div class="perm-info">
+        <div class="perm-name">Notifications</div>
+        <div class="perm-detail">Alertes pendant les sessions</div>
+      </div>
+      <div class="perm-status checking" id="status-notif">···</div>
+    </div>
+    <div id="fix-notif"></div>
+  </div>
+
+  <div class="info-section">
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="label">Navigateur</div>
+        <div class="value" id="info-browser">—</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Système</div>
+        <div class="value" id="info-os">—</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Protocole</div>
+        <div class="value" id="info-proto">—</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Date</div>
+        <div class="value" id="info-date">—</div>
+      </div>
     </div>
   </div>
 
-  <!-- Navigateur -->
-  <div class="section">
-    <div class="section-header">Navigateur</div>
-    <div class="row">
-      <div class="row-label">Navigateur</div>
-      <div class="row-value" id="info-browser"></div>
-    </div>
-    <div class="row">
-      <div class="row-label">Système</div>
-      <div class="row-value" id="info-os"></div>
-    </div>
-    <div class="row">
-      <div class="row-label">Protocole</div>
-      <div class="row-value" id="info-proto"></div>
-    </div>
-  </div>
-
-  <button class="btn-copy" onclick="copyReport()" id="copybtn">⬡ Copier le rapport pour le support</button>
+  <button class="btn" onclick="copyReport()" id="copybtn">Copier le rapport pour le support</button>
   <div class="footer-note">Aucune donnée n'est envoyée. Tout est traité localement dans votre navigateur.</div>
 
 </div>
 
 <script>
 const now = new Date();
-document.getElementById('ts').textContent =
-  'Généré le ' + now.toLocaleDateString('fr-FR', {weekday:'long', year:'numeric', month:'long', day:'numeric'}) +
-  ' à ' + now.toLocaleTimeString('fr-FR');
+document.getElementById('info-date').textContent =
+  now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
 
-// --- Navigateur ---
-function getBrowser() {
+// --- Browser detection ---
+function detectBrowserType() {
   const ua = navigator.userAgent;
-  let name = 'Inconnu', ver = '';
-  let m;
-  if ((m = ua.match(/Edg\/([\d.]+)/)))         { name = 'Microsoft Edge'; ver = m[1]; }
-  else if ((m = ua.match(/OPR\/([\d.]+)/)))    { name = 'Opera'; ver = m[1]; }
-  else if ((m = ua.match(/Chrome\/([\d.]+)/))) { name = 'Google Chrome'; ver = m[1]; }
-  else if ((m = ua.match(/Firefox\/([\d.]+)/))){ name = 'Mozilla Firefox'; ver = m[1]; }
-  else if ((m = ua.match(/Version\/([\d.]+).*Safari/))) { name = 'Safari'; ver = m[1]; }
-  return name + (ver ? ' ' + ver : '');
+  if (/Edg\//.test(ua))       return 'edge';
+  if (/OPR\/|Opera/.test(ua)) return 'unsupported';
+  if (/Chrome\//.test(ua))    return 'chrome';
+  if (/Firefox\//.test(ua))   return 'firefox';
+  if (/Safari\//.test(ua))    return 'safari';
+  return 'unsupported';
+}
+
+function getFullBrowserName() {
+  const ua = navigator.userAgent; let m;
+  if ((m = ua.match(/Edg\/([\d.]+)/)))               return 'Microsoft Edge ' + m[1].split('.')[0];
+  if ((m = ua.match(/OPR\/([\d.]+)/)))               return 'Opera ' + m[1].split('.')[0];
+  if ((m = ua.match(/Chrome\/([\d.]+)/)))            return 'Chrome ' + m[1].split('.')[0];
+  if ((m = ua.match(/Firefox\/([\d.]+)/)))           return 'Firefox ' + m[1].split('.')[0];
+  if ((m = ua.match(/Version\/([\d.]+).*Safari/)))   return 'Safari ' + m[1].split('.')[0];
+  return 'Inconnu';
 }
 
 function getOS() {
   const ua = navigator.userAgent;
-  if (ua.includes('Windows NT 10.0')) return 'Windows 10 / 11';
+  if (ua.includes('Windows NT 10.0')) return 'Windows 10/11';
   if (ua.includes('Windows NT 6.3'))  return 'Windows 8.1';
   if (ua.includes('Windows NT 6.1'))  return 'Windows 7';
   if (/Mac OS X ([\d_]+)/.test(ua))   return 'macOS ' + ua.match(/Mac OS X ([\d_]+)/)[1].replace(/_/g,'.');
   if (ua.includes('Android'))         return 'Android';
-  if (ua.includes('iPhone'))          return 'iOS (iPhone)';
-  if (ua.includes('iPad'))            return 'iOS (iPad)';
+  if (ua.includes('iPhone'))          return 'iPhone';
+  if (ua.includes('iPad'))            return 'iPad';
   if (ua.includes('Linux'))           return 'Linux';
   return 'Inconnu';
 }
 
-document.getElementById('info-browser').textContent = getBrowser();
-document.getElementById('info-os').textContent = getOS();
-const proto = location.protocol === 'https:' ? 'HTTPS (sécurisé)' : 'HTTP — non sécurisé (MediaDevices non disponible)';
-document.getElementById('info-proto').innerHTML =
+const browserType = detectBrowserType();
+const browserName = getFullBrowserName();
+
+if (browserType === 'unsupported') {
+  document.getElementById('unsupported-banner').innerHTML =
+    '<div class="unsupported">' +
+    '<div class="unsupported-icon">!</div>' +
+    '<div>' +
+    '<div class="unsupported-title">Navigateur non pris en charge</div>' +
+    '<div class="unsupported-body">Pour utiliser Evaluo, ouvrez cette page dans <strong>Google Chrome</strong>, <strong>Microsoft Edge</strong>, <strong>Firefox</strong> ou <strong>Safari</strong>.</div>' +
+    '</div></div>';
+}
+
+document.getElementById('info-browser').textContent = browserName;
+document.getElementById('info-os').textContent      = getOS();
+document.getElementById('info-proto').innerHTML     =
   location.protocol === 'https:'
-    ? '<span class="badge ok">✓ HTTPS</span>'
-    : '<span class="badge err">✗ HTTP — permissions indisponibles</span>';
+    ? 'HTTPS <span style="color:var(--ok)">✓</span>'
+    : '<span style="color:var(--err)">HTTP — non sécurisé</span>';
 
-// --- Badges helpers ---
-function badge(state) {
-  if (state === 'granted')  return '<span class="badge ok">✓ Autorisé</span>';
-  if (state === 'denied')   return '<span class="badge err">✗ Refusé</span>';
-  if (state === 'prompt')   return '<span class="badge warn">⚠ Non demandé (autorisation requise)</span>';
-  if (state === 'na')       return '<span class="badge info">— Non disponible dans ce navigateur</span>';
-  return '<span class="badge warn">? Inconnu</span>';
+// --- Status helpers ---
+function statusInfo(st) {
+  if (st === 'granted') return { cls: 'ok',   label: 'Autorisé' };
+  if (st === 'denied')  return { cls: 'err',  label: 'Refusé' };
+  if (st === 'prompt')  return { cls: 'warn', label: 'À autoriser' };
+  if (st === 'na')      return { cls: 'warn', label: 'Indisponible' };
+  return { cls: 'checking', label: '···' };
 }
 
-function deviceBadges(names, type) {
-  if (!names || names.length === 0) {
-    return '<span class="badge warn">⚠ Aucun ' + type + ' détecté</span>';
+function renderStatus(elId, st) {
+  const info = statusInfo(st);
+  const el = document.getElementById(elId);
+  el.className = 'perm-status ' + info.cls;
+  el.textContent = info.label;
+}
+
+// --- Fix instructions ---
+const FIX = {
+  camera: {
+    chrome:  ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Sélectionnez <strong>« Paramètres du site »</strong>", "Passez <strong>Caméra</strong> sur <strong>« Autoriser »</strong>", "Rechargez la page <kbd>F5</kbd>"],
+    edge:    ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Sélectionnez <strong>« Autorisations pour ce site »</strong>", "Passez <strong>Caméra</strong> sur <strong>« Autoriser »</strong>", "Rechargez la page <kbd>F5</kbd>"],
+    firefox: ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Cliquez sur la croix ✕ à côté de <strong>Utiliser la caméra : Bloqué</strong>", "Rechargez la page <kbd>F5</kbd> et cliquez <strong>« Autoriser »</strong>"],
+    safari:  ["Dans la barre de menu : <strong>Safari → Réglages</strong> <kbd>⌘,</kbd>", "Onglet <strong>Sites web</strong> → <strong>Caméra</strong>", "Trouvez <strong>evaluo.eu</strong> et sélectionnez <strong>« Autoriser »</strong>"]
+  },
+  microphone: {
+    chrome:  ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Sélectionnez <strong>« Paramètres du site »</strong>", "Passez <strong>Microphone</strong> sur <strong>« Autoriser »</strong>", "Rechargez la page <kbd>F5</kbd>"],
+    edge:    ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Sélectionnez <strong>« Autorisations pour ce site »</strong>", "Passez <strong>Microphone</strong> sur <strong>« Autoriser »</strong>", "Rechargez la page <kbd>F5</kbd>"],
+    firefox: ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Cliquez sur la croix ✕ à côté de <strong>Utiliser le microphone : Bloqué</strong>", "Rechargez la page <kbd>F5</kbd> et cliquez <strong>« Autoriser »</strong>"],
+    safari:  ["Dans la barre de menu : <strong>Safari → Réglages</strong> <kbd>⌘,</kbd>", "Onglet <strong>Sites web</strong> → <strong>Microphone</strong>", "Trouvez <strong>evaluo.eu</strong> et sélectionnez <strong>« Autoriser »</strong>"]
+  },
+  notifications: {
+    chrome:  ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Sélectionnez <strong>« Paramètres du site »</strong>", "Passez <strong>Notifications</strong> sur <strong>« Autoriser »</strong>"],
+    edge:    ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Sélectionnez <strong>« Autorisations pour ce site »</strong>", "Passez <strong>Notifications</strong> sur <strong>« Autoriser »</strong>"],
+    firefox: ["Cliquez sur le <strong>🔒 cadenas</strong> à gauche de l'adresse", "Cliquez sur la croix ✕ à côté de <strong>Envoyer des notifications : Bloqué</strong>", "Rechargez la page <kbd>F5</kbd> et acceptez la demande"],
+    safari:  ["Dans la barre de menu : <strong>Safari → Réglages</strong> <kbd>⌘,</kbd>", "Onglet <strong>Sites web</strong> → <strong>Notifications</strong>", "Trouvez <strong>evaluo.eu</strong> et sélectionnez <strong>« Autoriser »</strong>"]
   }
-  return names.map(n => '<span class="device-name">' + escHtml(n) + '</span>').join('');
+};
+
+function renderFix(elId, permKey, st) {
+  const el = document.getElementById(elId);
+  if (st === 'granted' || st === 'na' || browserType === 'unsupported') {
+    el.innerHTML = '';
+    return;
+  }
+  const steps = FIX[permKey]?.[browserType];
+  if (!steps) { el.innerHTML = ''; return; }
+  el.innerHTML =
+    '<div class="fix-block">' +
+    '<div class="fix-title">Comment autoriser</div>' +
+    '<ol class="fix-steps">' + steps.map(s => '<li>' + s + '</li>').join('') + '</ol>' +
+    '</div>';
 }
+
+// --- State ---
+const state = {
+  camera: '?', mic: '?', notif: '?',
+  cameraNames: [], micNames: [],
+  browser: browserName, os: getOS(), proto: location.protocol
+};
 
 function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// --- State storage ---
-const state = {
-  camera: '?', mic: '?', screen: '?', notif: '?',
-  cameraNames: [], micNames: [],
-  browser: getBrowser(), os: getOS(), proto: location.protocol
-};
-
-// --- Permissions API ---
-async function checkPerm(name, elId, stateKey) {
+// --- Permissions ---
+async function checkPerm(name, statusElId, fixElId, stateKey, permKey) {
   if (!navigator.permissions) {
-    document.getElementById(elId).innerHTML = badge('na');
     state[stateKey] = 'na';
+    renderStatus(statusElId, 'na');
     return;
   }
   try {
     const res = await navigator.permissions.query({ name });
     state[stateKey] = res.state;
-    document.getElementById(elId).innerHTML = badge(res.state);
+    renderStatus(statusElId, res.state);
+    renderFix(fixElId, permKey, res.state);
     res.onchange = () => {
       state[stateKey] = res.state;
-      document.getElementById(elId).innerHTML = badge(res.state);
+      renderStatus(statusElId, res.state);
+      renderFix(fixElId, permKey, res.state);
+      updateGlobalStatus();
     };
   } catch(e) {
-    document.getElementById(elId).innerHTML = badge('na');
     state[stateKey] = 'na';
+    renderStatus(statusElId, 'na');
   }
 }
 
-// Partage d'écran : pas de query disponible, mention directe
-function checkScreen() {
-  const el = document.getElementById('perm-screen');
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
-    el.innerHTML = badge('na');
-    state.screen = 'na';
-  } else {
-    el.innerHTML = '<span class="badge info">— Demandé à chaque utilisation (comportement standard)</span>';
-    state.screen = 'demande-systematique';
-  }
-}
-
-// Notifications
 async function checkNotif() {
-  const el = document.getElementById('perm-notif');
   if (!('Notification' in window)) {
-    el.innerHTML = badge('na');
     state.notif = 'na';
+    renderStatus('status-notif', 'na');
     return;
   }
   const n = Notification.permission;
   state.notif = n === 'default' ? 'prompt' : n;
-  el.innerHTML = badge(state.notif);
+  renderStatus('status-notif', state.notif);
+  renderFix('fix-notif', 'notifications', state.notif);
 }
 
-// --- MediaDevices ---
 async function enumDevices() {
-  const camEl  = document.getElementById('dev-camera');
-  const micEl  = document.getElementById('dev-mic');
-
-  if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-    camEl.innerHTML = '<span class="badge na">— API non disponible</span>';
-    micEl.innerHTML = '<span class="badge na">— API non disponible</span>';
+  if (!navigator.mediaDevices?.enumerateDevices) {
+    document.getElementById('detail-camera').textContent = 'Non disponible';
+    document.getElementById('detail-mic').textContent    = 'Non disponible';
     return;
   }
 
   try {
-    // Demande permission pour obtenir les labels
     let stream = null;
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    } catch(e) {
-      // Si refus, on essaie quand même l'enum (labels masqués)
-    }
+    try { stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true }); } catch(e) {}
 
     const devices = await navigator.mediaDevices.enumerateDevices();
+    const cams = devices.filter(d => d.kind === 'videoinput').map(d => d.label || 'Caméra (nom masqué)');
+    const mics = devices.filter(d => d.kind === 'audioinput').map(d => d.label || 'Micro (nom masqué)');
 
-    const cameras = devices.filter(d => d.kind === 'videoinput');
-    const mics    = devices.filter(d => d.kind === 'audioinput');
+    state.cameraNames = cams;
+    state.micNames    = mics;
 
-    const camNames = cameras.map(d => d.label || '(Nom masqué — permission caméra non accordée)');
-    const micNames = mics.map(d => d.label || '(Nom masqué — permission microphone non accordée)');
+    document.getElementById('detail-camera').textContent = cams.length
+      ? (cams.length > 1 ? cams.length + ' caméras · ' : '') + cams[0]
+      : 'Aucune caméra détectée';
+    document.getElementById('detail-mic').textContent = mics.length
+      ? (mics.length > 1 ? mics.length + ' micros · ' : '') + mics[0]
+      : 'Aucun microphone détecté';
 
-    state.cameraNames = camNames;
-    state.micNames    = micNames;
+    if (stream) stream.getTracks().forEach(t => t.stop());
 
-    camEl.innerHTML = deviceBadges(camNames, 'caméra');
-    micEl.innerHTML = deviceBadges(micNames, 'microphone');
+    checkPerm('camera',     'status-camera', 'fix-camera', 'camera', 'camera');
+    checkPerm('microphone', 'status-mic',    'fix-mic',    'mic',    'microphone');
+  } catch(e) {}
+}
 
-    if (stream) {
-      stream.getTracks().forEach(t => t.stop());
-    }
+function updateGlobalStatus() {
+  if (browserType === 'unsupported') {
+    document.getElementById('status-hero').style.display = 'none';
+    return;
+  }
 
-    // Re-check permissions after user grant
-    checkPerm('camera',     'perm-camera', 'camera');
-    checkPerm('microphone', 'perm-mic',    'mic');
+  if (state.camera === '?' || state.mic === '?' || state.notif === '?') return;
 
-  } catch(e) {
-    camEl.innerHTML = '<span class="badge err">✗ Erreur : ' + escHtml(e.message) + '</span>';
-    micEl.innerHTML = '<span class="badge err">✗ Erreur : ' + escHtml(e.message) + '</span>';
+  const issues = [];
+  if (state.camera === 'denied' || state.camera === 'prompt') issues.push('caméra');
+  if (state.mic === 'denied'    || state.mic === 'prompt')    issues.push('microphone');
+  if (state.notif === 'denied'  || state.notif === 'prompt')  issues.push('notifications');
+
+  const hasDenied = state.camera === 'denied' || state.mic === 'denied' || state.notif === 'denied';
+  const hero = document.getElementById('status-hero');
+
+  if (issues.length === 0) {
+    hero.className = 'status-hero ok';
+    hero.innerHTML =
+      '<div class="status-icon">✓</div>' +
+      '<div class="status-text">' +
+      '<div class="status-title">Tout est prêt</div>' +
+      '<div class="status-sub">Votre navigateur est correctement configuré pour les sessions Evaluo.</div>' +
+      '</div>';
+  } else {
+    let label;
+    if (issues.length === 1) label = issues[0];
+    else if (issues.length === 2) label = issues[0] + ' et ' + issues[1];
+    else label = issues.slice(0, -1).join(', ') + ' et ' + issues[issues.length - 1];
+
+    hero.className = 'status-hero ' + (hasDenied ? 'error' : 'issue');
+    hero.innerHTML =
+      '<div class="status-icon">' + (hasDenied ? '✕' : '!') + '</div>' +
+      '<div class="status-text">' +
+      '<div class="status-title">Action requise</div>' +
+      '<div class="status-sub">À corriger : ' + label + '. Suivez les étapes indiquées sous chaque permission.</div>' +
+      '</div>';
   }
 }
 
-// --- Copy ---
+// --- Copy report ---
 function copyReport() {
   const lines = [];
-  lines.push('====== RAPPORT DE DIAGNOSTIC EVALUO.EU ======');
-  lines.push('Date : ' + now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR'));
+  lines.push('====== DIAGNOSTIC EVALUO.EU ======');
+  lines.push('Date          : ' + now.toLocaleString('fr-FR'));
   lines.push('');
   lines.push('-- Navigateur --');
-  lines.push('Navigateur : ' + state.browser);
-  lines.push('Système    : ' + state.os);
-  lines.push('Protocole  : ' + state.proto);
+  lines.push('Navigateur    : ' + state.browser);
+  lines.push('Système       : ' + state.os);
+  lines.push('Protocole     : ' + state.proto);
   lines.push('');
   lines.push('-- Permissions --');
-  lines.push('Caméra          : ' + state.camera);
-  lines.push('Microphone      : ' + state.mic);
-  lines.push('Partage écran   : ' + state.screen);
-  lines.push('Notifications   : ' + state.notif);
+  lines.push('Caméra        : ' + state.camera);
+  lines.push('Microphone    : ' + state.mic);
+  lines.push('Notifications : ' + state.notif);
   lines.push('');
   lines.push('-- Périphériques --');
   if (state.cameraNames.length)
-    state.cameraNames.forEach((n,i) => lines.push('Caméra ' + (i+1) + '      : ' + n));
+    state.cameraNames.forEach((n,i) => lines.push('Caméra ' + (i+1) + '       : ' + n));
   else
-    lines.push('Caméra          : aucune détectée');
-
+    lines.push('Caméra        : aucune');
   if (state.micNames.length)
     state.micNames.forEach((n,i) => lines.push('Microphone ' + (i+1) + '   : ' + n));
   else
-    lines.push('Microphone      : aucun détecté');
+    lines.push('Microphone    : aucun');
+  lines.push('==================================');
 
-  lines.push('==============================================');
+  const text = lines.join('\n');
+  const btn = document.getElementById('copybtn');
+  const reset = () => setTimeout(() => { btn.textContent = 'Copier le rapport pour le support'; }, 2500);
 
-  navigator.clipboard.writeText(lines.join('\n')).then(() => {
-    const btn = document.getElementById('copybtn');
-    const orig = btn.textContent;
-    btn.textContent = '✓ Copié dans le presse-papiers !';
-    setTimeout(() => { btn.textContent = orig; }, 2500);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Rapport copié';
+    reset();
   }).catch(() => {
     const ta = document.createElement('textarea');
-    ta.value = lines.join('\n');
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    const btn = document.getElementById('copybtn');
-    btn.textContent = '✓ Copié !';
-    setTimeout(() => { btn.textContent = '⬡ Copier le rapport pour le support'; }, 2500);
+    ta.value = text;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    btn.textContent = '✓ Rapport copié';
+    reset();
   });
 }
 
 // --- Init ---
 (async () => {
-  await checkPerm('camera',     'perm-camera', 'camera');
-  await checkPerm('microphone', 'perm-mic',    'mic');
-  checkScreen();
+  await checkPerm('camera',     'status-camera', 'fix-camera', 'camera', 'camera');
+  await checkPerm('microphone', 'status-mic',    'fix-mic',    'mic',    'microphone');
   await checkNotif();
   await enumDevices();
+  updateGlobalStatus();
 })();
 </script>
 </body>
